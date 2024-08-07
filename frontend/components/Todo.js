@@ -2,10 +2,11 @@ import React from 'react'
 
 export default class Todo extends React.Component {
   render() {
+    const {name, toggleComp} = this.props
     return (
-      <div>
-        Todo
-      </div>
+      <li onClick={() => toggleComp(name.id)}>
+        {name.name}
+      </li>
     )
   }
 }
