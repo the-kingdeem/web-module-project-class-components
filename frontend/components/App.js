@@ -8,7 +8,8 @@ export default class App extends React.Component {
     this.state = {
       names: [],
       inputVal: '',
-      id: 1,
+      nextId: 1,
+      hideCompleted: false
     }
   }
 
@@ -41,11 +42,21 @@ export default class App extends React.Component {
     }));
   };
 
+  toggleHideComp = () => {
+    this.setState((prevState) => ({
+      hideCompleted: !prevState.hideCompleted
+    }), () => console.log('hideCompleted:', this.state.hideCompleted));
+  };
+
   inputChangeHandler = (evt) => {
     this.setState({inputVal: evt.target.value})
   }
 
   render() {
+    const visibleNames = this.state.hideCompleted
+      ? this.state.names.filter(name => !name.completed)
+      : this.state.names
+
     return (
       <div className='App'>
         <h1>Todos:</h1>
@@ -53,9 +64,11 @@ export default class App extends React.Component {
             inputVal={this.state.inputVal}
             inputChangeHandler={this.inputChangeHandler}
             addName={this.addName}
-            clearComp={this.clearComp}
+            onClick={this.clearComp}
+            toggleHideComp={this.toggleHideComp} 
+            hideCompleted={this.state.hideCompleted}
           />
-          <TodoList names={this.state.names} toggleComp={this.toggleComp} />
+          <TodoList names={visibleNames} toggleComp={this.toggleComp} />
       </div>
     )
   }
