@@ -2,73 +2,46 @@ import React from 'react'
 import Form from './Form';
 import TodoList from './TodoList';
 
+let id = 0
+let getId = () => ++id
+
+const initialTodos = [
+  {id: getId(), name: "Walk", completed: false},
+  {id: getId(), name: "Run", completed: true},
+  {id: getId(), name: "Talk", completed: false},
+  {id: getId(), name: "Slide", completed: true}
+]
+
 export default class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      names: [],
-      inputVal: '',
-      nextId: 1,
-      hideCompleted: false
-    }
+  state = {
+    todos: initialTodos
   }
 
-  addName = (evt) => {
-    evt.preventDefault()
-    const newName = {
-      name: this.state.inputVal,
-      id:this.state.nextId,
-      completed: false
-    }
+  addTodo = (name) => {
+    this.setState({
+      ...this.state,
+      todos: this.state.todos.concat({id: getId(), completed: false, name})
+    })
+  }
 
-    this.setState((prevState) => ({
-      names: [...prevState.names, newName],
-      inputVal: '',
-      nextId: prevState.nextId + 1
-    }))
-  };
-
-  toggleComp = (id) => {
-    this.setState((prevState) => ({
-      names: prevState.names.map(name =>
-        name.id === id ? { ...name, completed: !name.completed } : name
-      )
-    }));
-  };
-
-  clearComp = () => {
-    this.setState((prevState) => ({
-      names: prevState.names.filter(name => !name.completed)
-    }));
-  };
-
-  toggleHideComp = () => {
-    this.setState((prevState) => ({
-      hideCompleted: !prevState.hideCompleted
-    }), () => console.log('hideCompleted:', this.state.hideCompleted));
-  };
-
-  inputChangeHandler = (evt) => {
-    this.setState({inputVal: evt.target.value})
+  toggleComp = id => {
+    this.setState({
+      ...this.state,
+      todos: this.state.todos.map(newTodo => {
+        if (id == newTodo.id) {
+          return {...newTodo, completed: !newTodo.completed}
+        }
+        return newTodo
+      })
+    })
   }
 
   render() {
-    const visibleNames = this.state.hideCompleted
-      ? this.state.names.filter(name => !name.completed)
-      : this.state.names
-
     return (
       <div className='App'>
         <h1>Todos:</h1>
-        <Form
-            inputVal={this.state.inputVal}
-            inputChangeHandler={this.inputChangeHandler}
-            addName={this.addName}
-            onClick={this.clearComp}
-            toggleHideComp={this.toggleHideComp} 
-            hideCompleted={this.state.hideCompleted}
-          />
-          <TodoList names={visibleNames} toggleComp={this.toggleComp} />
+        <TodoList todos={this.state.todos} toggleComp={this.toggleComp} />
+        <Form addTodo={this.addTodo}/>
       </div>
     )
   }

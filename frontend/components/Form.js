@@ -1,14 +1,31 @@
 import React from 'react'
 
 export default class Form extends React.Component {
+  state ={
+    name: ""
+  }
+
+  onSubmit = evt => {
+    evt.preventDefault()
+    this.props.addTodo(this.state.name)
+    this.setState({
+      name: ''
+    })
+  }
+  
+  onChange = evt => {
+    this.setState({
+    name: evt.target.value
+    })
+  }
+
   render() {
-    const {addName, inputChangeHandler, inputVal, toggleHideComp, hideCompleted} = this.props
+    
     return (
-      <form onSubmit={addName}>
-        <input type='text' placeholder='Type todo' onChange={inputChangeHandler} value={inputVal}/>
-        <button type='submit'>Submit</button>
-        <button type='button' onClick={toggleHideComp}>{hideCompleted ? 'Show Completed' : 'Hide Completed'}</button>
-      </form>
+     <form onSubmit={this.onSubmit}>
+      <input type="text" value={this.state.name} onChange={this.onChange}/>
+      <input type="submit"/>
+     </form>
     )
   }
 }

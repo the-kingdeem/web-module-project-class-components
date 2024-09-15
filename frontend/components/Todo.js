@@ -2,13 +2,13 @@ import React from 'react'
 
 export default class Todo extends React.Component {
   render() {
-    const {name, toggleComp} = this.props
+    const {id, name, completed} = this.props.todo
+    const {toggleComp} = this.props
+   
     return (
-      <li 
-      style={{ textDecoration: name.completed ? 'line-through' : 'none', cursor: 'pointer' }}
-      onClick={() => toggleComp(name.id)}>
-        {name.name}
-      </li>
+      <div onClick={() => toggleComp(id)}>
+        {name} {completed && ' ✅'}
+      </div>
     )
   }
 }
